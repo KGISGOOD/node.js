@@ -1,12 +1,12 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors');
+const cors = require('cors'); //瀏覽器的安全機制，用來防止跨來源請求的風險
 const path = require('path');
 const app = express();
 const port = 3000;
 
 // 第一階段：設定各種路由
-// 執行指令：node server.js
+
 
 // 設定中間件
 app.use(express.json()); // 解析 JSON 請求
@@ -37,6 +37,7 @@ app.get('/contact', (req, res) => {
     // 'contact.html' 是要發送的 HTML 檔案名稱
     res.sendFile(path.join(__dirname, 'views', 'contact.html')); 
 });
+// 執行指令：node server.js
 
 
 
@@ -71,13 +72,13 @@ const db = new sqlite3.Database('./todos.db', (err) => {
 
 // Todo List API 路由
 // /api/todos 不是用來顯示網頁的路由，而是一個前端專門用來「與後端交換資料」的 API 端點，也稱為 資料對接的介面
-app.get('/api/todos', (req, res) => {
-    db.all('SELECT * FROM todos', [], (err, rows) => {
-        if (err) {
-            console.error('查詢失敗:', err.message);
-            res.status(500).json({ error: '查詢失敗' });
-        } else {
-            res.json(rows);
+app.get('/api/todos', (req, res) => { // 定義處理 GET 請求的路由，當訪問 /api/todos 時觸發
+    db.all('SELECT * FROM todos', [], (err, rows) => { // 查詢所有 todos 資料，沒有條件，因此使用空陣列 []
+        if (err) { // 如果查詢出錯
+            console.error('查詢失敗:', err.message); // 打印錯誤訊息到終端
+            res.status(500).json({ error: '查詢失敗' }); // 返回 500 錯誤，並附帶錯誤訊息
+        } else { // 查詢成功
+            res.json(rows); // 返回查詢結果（所有的待辦事項）給前端，格式為 JSON
         }
     });
 });
