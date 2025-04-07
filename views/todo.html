@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>待辦事項應用</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>待辦事項</h1>
+    <input type="text" id="taskInput" placeholder="輸入新任務">
+    <button onclick="addTask()">新增</button>
+    <ul id="todoList"></ul>
+    <a href="/">返回首頁</a>
+
+    <script>
+        async function loadTodos() {
+            try {
+                const response = await fetch('/api/todos');
+                if (!response.ok) throw new Error('無法載入待辦事項');
+                const todos = await response.json();
+                const todoList = document.getElementById('todoList');
+                todoList.innerHTML = '';
+                todos.forEach(todo => {
+                    const li = document.createElement('li');
+                    li.textContent = todo.task;
+                    todoList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('載入失敗:', error);
+            }
+        }
+
+        async function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const task = taskInput.value.trim();
+            if (!task) return;
+
+            try {
+                const response = await fetch('/api/todos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ task })
+                });
+                if (!response.ok) throw new Error('新增失敗');
+                taskInput.value = '';
+                loadTodos();
+            } catch (error) {
+                console.error('新增失敗:', error);
+            }
+        }
+
+        window.onload = loadTodos;
+    </script>
+</body>
+</html>
