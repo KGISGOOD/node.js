@@ -17,39 +17,42 @@
     <a href="/">返回首頁</a>
 
     <script>
+        // 新增一個待辦任務，並將這個任務送到後端伺服器
+        async function addTask() {
+            const taskInput = document.getElementById('taskInput'); // 取得輸入框元素
+            const task = taskInput.value.trim(); // 去除多餘空白，取得使用者輸入的任務文字
+            if (!task) return; // 如果沒輸入任何東西，就中止
+
+            // 發送 POST 請求到後端 API（送出 JSON 資料）
+            const response = await fetch('/api/todos', {
+                method: 'POST', // 指定為 POST 方法
+                headers: { 'Content-Type': 'application/json' }, // 告知後端這是 JSON 格式
+                body: JSON.stringify({ task }) // 將 JS 物件轉成 JSON 字串後送出
+            });
+
+            if (!response.ok) throw new Error('新增失敗'); // 如果回應非 200，拋出錯誤
+            taskInput.value = ''; // 清空輸入框
+            loadTodos(); // 呼叫函數重新載入任務列表（下一階段）
+        }
+
+        // 從後端載入所有任務並更新畫面顯示內容的函數
         async function loadTodos() {
             try {
-                const response = await fetch('/api/todos');
-                if (!response.ok) throw new Error('無法載入待辦事項');
-                const todos = await response.json();
+                //fetch() 中沒有特別指定 method，那預設就是使用 GET 方法
+                const response = await fetch('/api/todos'); // 發送 GET 請求向後端查詢任務列表
+                if (!response.ok) throw new Error('無法載入待辦事項'); // 若請求失敗則報錯
+                const todos = await response.json(); // 將後端傳回的 JSON 資料轉為 JS 陣列
+
+                // 顯示任務到畫面上（清空再動態生成 li 元素）
                 const todoList = document.getElementById('todoList');
-                todoList.innerHTML = '';
+                todoList.innerHTML = ''; // 清空清單
                 todos.forEach(todo => {
                     const li = document.createElement('li');
-                    li.textContent = todo.task;
+                    li.textContent = todo.task; // 每一項任務加入列表
                     todoList.appendChild(li);
                 });
             } catch (error) {
                 console.error('載入失敗:', error);
-            }
-        }
-
-        async function addTask() {
-            const taskInput = document.getElementById('taskInput');
-            const task = taskInput.value.trim();
-            if (!task) return;
-
-            try {
-                const response = await fetch('/api/todos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ task })
-                });
-                if (!response.ok) throw new Error('新增失敗');
-                taskInput.value = '';
-                loadTodos();
-            } catch (error) {
-                console.error('新增失敗:', error);
             }
         }
 
