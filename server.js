@@ -69,20 +69,6 @@ db.run(`
 });
 
 
-
-// Todo List API 路由
-// /api/todos 不是用來顯示網頁的路由，而是一個前端專門用來「與後端交換資料」的 API 端點，也稱為 資料對接的介面
-app.get('/api/todos', (req, res) => { // 定義處理 GET 請求的路由，當訪問 /api/todos 時觸發
-    db.all('SELECT * FROM todos', [], (err, rows) => { // 查詢所有 todos 資料，沒有條件，因此使用空陣列 []
-        if (err) { // 如果查詢出錯
-            console.error('查詢失敗:', err.message); // 打印錯誤訊息到終端
-            res.status(500).json({ error: '查詢失敗' }); // 返回 500 錯誤，並附帶錯誤訊息
-        } else { // 查詢成功
-            res.json(rows); // 返回查詢結果（所有的待辦事項）給前端，格式為 JSON
-        }
-    });
-});
-
 // POST /api/todos：處理新增任務的請求
 app.post('/api/todos', (req, res) => {
     const { task } = req.body; // 從前端送來的 JSON 中解析出 task
@@ -99,6 +85,19 @@ app.post('/api/todos', (req, res) => {
         }
     });
 });
+
+// 當前端向 /api/todos 發出 GET 請求時，從資料庫查出所有待辦事項，然後用 JSON 格式回傳給前端
+app.get('/api/todos', (req, res) => { // 定義處理 GET 請求的路由，當訪問 /api/todos 時觸發
+    db.all('SELECT * FROM todos', [], (err, rows) => { // 查詢所有 todos 資料，沒有條件，因此使用空陣列 []
+        if (err) { // 如果查詢出錯
+            console.error('查詢失敗:', err.message); // 打印錯誤訊息到終端
+            res.status(500).json({ error: '查詢失敗' }); // 返回 500 錯誤，並附帶錯誤訊息
+        } else { // 查詢成功
+            res.json(rows); // 返回查詢結果（所有的待辦事項）給前端，格式為 JSON
+        }
+    });
+});
+
 
 // 啟動伺服器
 app.listen(port, () => {

@@ -20,14 +20,15 @@
         // 新增一個待辦任務，並將這個任務送到後端伺服器
         async function addTask() {
             const taskInput = document.getElementById('taskInput'); // 取得輸入框元素
-            const task = taskInput.value.trim(); // 去除多餘空白，取得使用者輸入的任務文字
+            const task = taskInput.value.trim(); // 從輸入框中取得值並儲存到 task 變數中
             if (!task) return; // 如果沒輸入任何東西，就中止
 
             // 發送 POST 請求到後端 API（送出 JSON 資料）
+            // fetch : 前端與後端通訊
             const response = await fetch('/api/todos', {
                 method: 'POST', // 指定為 POST 方法
                 headers: { 'Content-Type': 'application/json' }, // 告知後端這是 JSON 格式
-                body: JSON.stringify({ task }) // 將 JS 物件轉成 JSON 字串後送出
+                body: JSON.stringify({ task }) // 將 JS 物件轉成 JSON 字串送到後端
             });
 
             if (!response.ok) throw new Error('新增失敗'); // 如果回應非 200，拋出錯誤
