@@ -40,13 +40,18 @@ app.get('/contact', (req, res) => {
 // 執行指令：node server.js
 
 
-
 // 第二階段：串後端：
 
 
 // Todo List 頁面
 app.get('/todo', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'todo.html'));
+});
+
+// 連接到 SQLite 資料庫
+const db = new sqlite3.Database('./todos.db', (err) => {
+    if (err) console.error('資料庫連接失敗:', err.message);
+    else console.log('成功連接到 SQLite 資料庫');
 });
 
 // 建立 todos 表
@@ -63,11 +68,6 @@ db.run(`
     else console.log('成功建立 todos 表');
 });
 
-// 連接到 SQLite 資料庫
-const db = new sqlite3.Database('./todos.db', (err) => {
-    if (err) console.error('資料庫連接失敗:', err.message);
-    else console.log('成功連接到 SQLite 資料庫');
-});
 
 
 // Todo List API 路由
