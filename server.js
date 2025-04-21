@@ -68,7 +68,7 @@ db.run(`
     else console.log('成功建立 todos 表');
 });
 
-
+//stpe:2
 // POST /api/todos：處理新增任務的請求
 app.post('/api/todos', (req, res) => {
     const { task } = req.body; // 從前端送來的 JSON 中解析出 task
@@ -85,7 +85,7 @@ app.post('/api/todos', (req, res) => {
         }
     });
 });
-
+//step:3
 // 當前端向 /api/todos 發出 GET 請求時，從資料庫查出所有待辦事項，然後用 JSON 格式回傳給前端
 app.get('/api/todos', (req, res) => { // 定義處理 GET 請求的路由，當訪問 /api/todos 時觸發
     db.all('SELECT * FROM todos', [], (err, rows) => { // 查詢所有 todos 資料，沒有條件，因此使用空陣列 []

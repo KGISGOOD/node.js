@@ -17,6 +17,7 @@
     <a href="/">返回首頁</a>
 
     <script>
+        //step:1
         // 新增一個待辦任務，並將這個任務送到後端伺服器
         async function addTask() {
             const taskInput = document.getElementById('taskInput'); // 取得輸入框元素
@@ -36,6 +37,7 @@
             loadTodos(); // 呼叫函數重新載入任務列表（下一階段）
         }
 
+        //step:4
         // 從後端載入所有任務並更新畫面顯示內容的函數
         async function loadTodos() {
             try {
