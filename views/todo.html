@@ -24,10 +24,9 @@
             const task = taskInput.value.trim(); // 從輸入框中取得值並儲存到 task 變數中
             if (!task) return; // 如果沒輸入任何東西，就中止
 
-            // 發送 POST 請求到後端 API（送出 JSON 資料）
-            // fetch : 前端與後端通訊
-            const response = await fetch('/api/todos', {
-                method: 'POST', // 指定為 POST 方法
+            const response = await fetch('/api/todos', { // fetch : 前端與後端通訊
+
+                method: 'POST', // 發送 POST 請求到後端 API（送出 JSON 資料）
                 headers: { 'Content-Type': 'application/json' }, // 告知後端這是 JSON 格式
                 body: JSON.stringify({ task }) // 將 JS 物件轉成 JSON 字串送到後端
             });
